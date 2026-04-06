@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propriedades Malate | Gestão Completa</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #121212;
+            --accent-color: #4ed9d9;
+            --text-color: #ffffff;
+            --secondary-text: #b0b0b0;
+            --border-color: #333333;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        /* Estilos da Capa */
+        header {
+            position: relative;
+            padding: 80px 20px;
+            text-align: center;
+            background-color: #1a1a1a;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .cover-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 4px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        header p {
+            color: var(--accent-color);
+            font-weight: 300;
+            margin-top: 10px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+
+        /* Botão de Upload da Capa */
+        .upload-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 8px 18px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background: var(--accent-color);
+            color: #000;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section-title {
+            color: var(--accent-color);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 15px;
+            margin: 40px 0 20px;
+            text-transform: uppercase;
+            font-size: 1.2rem;
+        }
+
+        /* Resumo Geral */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .summary-item {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-item span {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        /* Cartões de Propriedades */
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent-color);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info-row {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .label {
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .note-box {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-style: italic;
+            border: 1px dashed var(--accent-color);
+        }
+
+        /* Tabela */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #333;
+        }
+
+        th {
+            background: #f4f4f4;
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        td[contenteditable="true"] {
+            background: #fdfdfd;
+            cursor: cell;
+        }
+
+        td[contenteditable="true"]:focus {
+            background: #e6ffff;
+            outline: none;
+        }
+
+        .btn-save {
+            background: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            text-transform: uppercase;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--secondary-text);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header id="site-header">
+    <div class="cover-overlay"></div>
+    <div class="header-content">
+        <h1>PROPRIEDADES MALATE</h1>
+        <p>Gestão de Património Imobiliário</p>
+        
+        <label for="cover-upload" class="upload-btn">📷 Alterar Capa</label>
+        <input type="file" id="cover-upload" accept="image/*" style="display: none;" onchange="updateCover(this)">
+    </div>
+</header>
+
+<div class="container">
+    
+    <div class="section-title">Resumo Geral</div>
+    <div class="summary-grid">
+        <div class="summary-item"><span>5</span> Condomínios</div>
+        <div class="summary-item"><span>1</span> Penthouse</div>
+        <div class="summary-item"><span>2</span> Flats</div>
+        <div class="summary-item"><span>3</span> Vivendas</div>
+        <div class="summary-item"><span>2</span> Terrenos</div>
+    </div>
+
+    <div class="note-box">
+        <strong>Nota de Complexo:</strong> Os condomínios Clinton, Kito e a Penthouse estão situados no mesmo complexo, com entradas separadas.
+    </div>
+
+    <div class="section-title">Condomínios</div>
+    <div class="property-grid">
+        <div class="card">
+            <h3>1. Condomínio T.challa</h3>
+            <div class="info-row"><span class="label">Tipo:</span> 4 Apartamentos T1</div>
+            <div class="info-row"><span class="label">Local:</span> Bairro Jorge Dimitrov - Maputo, Talhão 605, Parcela C1</div>
+            <div class="info-row"><span class="label">Docs:</span> DUAT Legalizado</div>
+        </div>
+
+        <div class="card">
+            <h3>2. Condomínio Clinton</h3>
+            <div class="info-row"><span class="label">Tipo:</span> 8 Apartamentos (6 T2 e 2 T1)</div>
+            <div class="info-row"><span class="label">Local:</span> Bairro 25 de Junho B, Rua dos Fortes, n.º 66</div>
+            <div class="info-row"><span class="label">Docs:</span> DUAT Legalizado</div>
+        </div>
+
+        <div class="card">
+            <h3>3. Condomínio Kito</h3>
+            <div class="info-row"><span class="label">Tipo:</span> 7 Apartamentos T1</div>
+            <div class="info-row"><span class="label">Local:</span> Bairro 25 de Junho B</div>
+            <div class="info-row"><span class="label">Docs:</span> DUAT Legalizado</div>
+        </div>
+
+        <div class="card">
+            <h3>4. Condomínio Morrez</h3>
+            <div class="info-row"><span class="label">Tipo:</span> 8 Apt T1 e 1 Imóvel T2</div>
+            <div class="info-row"><span class="label">Local:</span> Bairro das Mahatas, Av. Dom Alexandre</div>
+            <div class="info-row"><span class="label">Docs:</span> Procuração / Comunicação DUAT</div>
+        </div>
+
+        <div class="card">
+            <h3>5. Condomínio Mussone</h3>
+            <div class="info-row"><span class="label">Tipo:</span> 4 Apartamentos (3 T2 e 1 T1)</div>
+            <div class="info-row"><span class="label">Local:</span> Bairro Inhagoia “A”, Rua do Canhueiro</div>
+            <div class="info-row"><span class="label">Docs:</span> Procuração / Pedido DUAT Pendente</div>
+        </div>
+    </div>
+
+    <div class="section-title">Flats & Penthouse</div>
+    <div class="property-grid">
+        <div class="card">
+            <h3>Penthouse</h3>
+            <div class="info-row"><span class="label">Extra:</span> Anexo T1</div>
+            <div class="info-row"><span class="label">Local:</span> Complexo Clinton/Kito</div>
+        </div>
+
+        <div class="card">
+            <h3>Flat T2 - Karl Marx</h3>
+            <div class="info-row"><span class="label">Local:</span> Av. Karl Marx, 3º Andar (Frente ao Mercado do Povo)</div>
+            <div class="info-row"><span class="label">Docs:</span> Procuração Legalizada</div>
+        </div>
+
+        <div class="card">
+            <h3>Flat T1 - Xipamanine</h3>
+            <div class="info-row"><span class="label">Local:</span> Bairro Xipamanine, Rua Irmãos Rubi, 1º Andar</div>
+            <div class="info-row"><span class="label">Docs:</span> Sisa Legalizada</div>
+        </div>
+    </div>
+
+    <div class="section-title">Propriedades Independentes</div>
+    <div class="property-grid">
+        <div class="card">
+            <h3>Imóvel T2 - Bagamoyo</h3>
+            <div class="info-row"><span class="label">Extra:</span> Contém uma Loja em anexo</div>
+            <div class="info-row"><span class="label">Local:</span> Av. Moçambique (ao lado da Galp)</div>
+        </div>
+
+        <div class="card">
+            <h3>Imóvel T3 - Matola</h3>
+            <div class="info-row"><span class="label">Extra:</span> Garagem e dependência</div>
+            <div class="info-row"><span class="label">Local:</span> Bairro Khongolote, Paragem Mulombela</div>
+        </div>
+
+        <div class="card">
+            <h3>Imóvel T3 - Maputo</h3>
+            <div class="info-row"><span class="label">Local:</span> Bairro George Dimitrov, Casa 32, Q. 73</div>
+            <div class="info-row"><span class="label">Docs:</span> DUAT Legalizado</div>
+        </div>
+    </div>
+
+    <div class="section-title">Terrenos</div>
+    <div class="property-grid">
+        <div class="card">
+            <h3>Terreno Costa do Sol</h3>
+            <div class="info-row"><span class="label">Dimensão:</span> 20m x 20m</div>
+            <div class="info-row"><span class="label">Local:</span> Mapulene, Parcela 6608/E</div>
+            <div class="info-row"><span class="label">Docs:</span> Procuração</div>
+        </div>
+
+        <div class="card">
+            <h3>Terreno Nsalene</h3>
+            <div class="info-row"><span class="label">Área:</span> 15 x 18</div>
+            <div class="info-row"><span class="label">Extra:</span> Dependência T1 e Barraca</div>
+            <div class="info-row"><span class="label">Local:</span> Av. Moçambique, Casa 45</div>
+        </div>
+    </div>
+
+    <div class="section-title">Tabela de Despesas Anual</div>
+    <div class="table-wrapper">
+        <table id="financeTable">
+            <thead>
+                <tr>
+                    <th>Mês</th>
+                    <th>Despesas</th>
+                    <th>Prejuízos</th>
+                    <th>Bonús</th>
+                    <th>Casa Vazia</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+    <button class="btn-save" onclick="saveTable()">SALVAR DADOS DA TABELA</button>
+
+</div>
+
+<footer>
+    <p>Silvia Malate - Propriedades Privadas &copy; 2026</p>
+</footer>
+
+<script>
+    // ==========================================
+    // 1. INICIALIZAÇÃO DO SUPABASE
+    // ==========================================
+    const { createClient } = supabase;
+    const supabaseUrl = 'https://dwznzdnvtezhkqzqwrsa.supabase.co';
+    const supabaseKey = 'sb_publishable_ZajKS3fZjhbLeGLdo-2IsA_sQgarlui';
+    const db = createClient(supabaseUrl, supabaseKey);
+    
+    // O banco de dados (db) agora está conectado! 
+    // Quando criar suas tabelas no Supabase, poderá usar comandos como:
+    // await db.from('sua_tabela').insert([{ dados }])
+
+    // ==========================================
+    // 2. LÓGICA DA TABELA E DA CAPA DO SITE
+    // ==========================================
+    const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    const tbody = document.querySelector("#financeTable tbody");
+
+    // Carregar meses na tabela
+    meses.forEach(mes => {
+        let row = `<tr>
+            <td><strong>${mes}</strong></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+            <td contenteditable="true"></td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+
+    // Função para salvar tabela (Atualmente salva no navegador, pronta para integrar o Supabase depois)
+    function saveTable() {
+        const tableData = tbody.innerHTML;
+        localStorage.setItem("malatePropertiesFinance", tableData);
+        alert("Informações salvas com sucesso!");
+        
+        /* Exemplo futuro para enviar ao Supabase:
+        db.from('tabela_financas').insert([{ html_tabela: tableData }]).then(response => {
+            console.log("Salvo no Supabase!", response);
+        });
+        */
+    }
+
+    // Função para atualizar e salvar a imagem de capa
+    function updateCover(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgData = e.target.result;
+                document.getElementById('site-header').style.backgroundImage = `url(${imgData})`;
+                localStorage.setItem("malatePropertiesCover", imgData);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Carregar dados salvos ao iniciar a página (Tabela e Capa)
+    window.onload = () => {
+        // Carregar Tabela
+        const savedTable = localStorage.getItem("malatePropertiesFinance");
+        if (savedTable) {
+            tbody.innerHTML = savedTable;
+        }
+
+        // Carregar Capa
+        const savedCover = localStorage.getItem("malatePropertiesCover");
+        if (savedCover) {
+            document.getElementById('site-header').style.backgroundImage = `url(${savedCover})`;
+        }
+    };
+</script>
+
+</body>
+</html>
