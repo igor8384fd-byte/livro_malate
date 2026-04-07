@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Propriedades Malate | Gestão Completa</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg-color: #000000;
@@ -24,7 +23,7 @@
             line-height: 1.5;
         }
 
-        /* Estilos da Capa */
+        /* Estilos da Capa Atualizados */
         header {
             position: relative;
             padding: 80px 20px;
@@ -35,6 +34,7 @@
             border-bottom: 2px solid var(--accent-color);
         }
 
+        /* Máscara escura para garantir que o texto seja legível por cima de qualquer foto */
         .cover-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -245,11 +245,11 @@
     
     <div class="section-title">Resumo Geral</div>
     <div class="summary-grid">
-        <div class="summary-item"><span>5</span> Condomínios</div>
-        <div class="summary-item"><span>1</span> Penthouse</div>
+        <div class="summary-item"><span>6</span> Condomínios</div>
+        <div class="summary-item"><span>2</span> Penthouses</div>
         <div class="summary-item"><span>2</span> Flats</div>
         <div class="summary-item"><span>3</span> Vivendas</div>
-        <div class="summary-item"><span>2</span> Terrenos</div>
+        <div class="summary-item"><span>1</span> Terreno</div>
     </div>
 
     <div class="note-box">
@@ -291,6 +291,13 @@
             <div class="info-row"><span class="label">Tipo:</span> 4 Apartamentos (3 T2 e 1 T1)</div>
             <div class="info-row"><span class="label">Local:</span> Bairro Inhagoia “A”, Rua do Canhueiro</div>
             <div class="info-row"><span class="label">Docs:</span> Procuração / Pedido DUAT Pendente</div>
+        </div>
+
+        <div class="card">
+            <h3>6. Condomínio Silvia</h3>
+            <div class="info-row"><span class="label">Tipo:</span> 4 Apartamentos e 1 Penthouse</div>
+            <div class="info-row"><span class="label">Local:</span> Mapulene, Parcela 6608/E</div>
+            <div class="info-row"><span class="label">Docs:</span> Procuração</div>
         </div>
     </div>
 
@@ -339,13 +346,6 @@
     <div class="section-title">Terrenos</div>
     <div class="property-grid">
         <div class="card">
-            <h3>Terreno Costa do Sol</h3>
-            <div class="info-row"><span class="label">Dimensão:</span> 20m x 20m</div>
-            <div class="info-row"><span class="label">Local:</span> Mapulene, Parcela 6608/E</div>
-            <div class="info-row"><span class="label">Docs:</span> Procuração</div>
-        </div>
-
-        <div class="card">
             <h3>Terreno Nsalene</h3>
             <div class="info-row"><span class="label">Área:</span> 15 x 18</div>
             <div class="info-row"><span class="label">Extra:</span> Dependência T1 e Barraca</div>
@@ -378,21 +378,6 @@
 </footer>
 
 <script>
-    // ==========================================
-    // 1. INICIALIZAÇÃO DO SUPABASE
-    // ==========================================
-    const { createClient } = supabase;
-    const supabaseUrl = 'https://dwznzdnvtezhkqzqwrsa.supabase.co';
-    const supabaseKey = 'sb_publishable_ZajKS3fZjhbLeGLdo-2IsA_sQgarlui';
-    const db = createClient(supabaseUrl, supabaseKey);
-    
-    // O banco de dados (db) agora está conectado! 
-    // Quando criar suas tabelas no Supabase, poderá usar comandos como:
-    // await db.from('sua_tabela').insert([{ dados }])
-
-    // ==========================================
-    // 2. LÓGICA DA TABELA E DA CAPA DO SITE
-    // ==========================================
     const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
     const tbody = document.querySelector("#financeTable tbody");
 
@@ -408,17 +393,11 @@
         tbody.innerHTML += row;
     });
 
-    // Função para salvar tabela (Atualmente salva no navegador, pronta para integrar o Supabase depois)
+    // Função para salvar tabela
     function saveTable() {
         const tableData = tbody.innerHTML;
         localStorage.setItem("malatePropertiesFinance", tableData);
-        alert("Informações salvas com sucesso!");
-        
-        /* Exemplo futuro para enviar ao Supabase:
-        db.from('tabela_financas').insert([{ html_tabela: tableData }]).then(response => {
-            console.log("Salvo no Supabase!", response);
-        });
-        */
+        alert("Informações da tabela salvas neste navegador!");
     }
 
     // Função para atualizar e salvar a imagem de capa
@@ -451,4 +430,5 @@
 </script>
 
 </body>
-</html>
+                </html>
+                                      
